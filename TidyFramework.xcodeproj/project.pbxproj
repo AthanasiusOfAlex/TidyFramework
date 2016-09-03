@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		520933761D7720B400056BA0 /* Tidy in Resources */ = {isa = PBXBuildFile; fileRef = 520933751D7720B400056BA0 /* Tidy */; };
+		520933781D77214700056BA0 /* TidyTestSuite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520933771D77214700056BA0 /* TidyTestSuite.swift */; };
+		5209337D1D773C9F00056BA0 /* TidyDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5209337C1D773C9F00056BA0 /* TidyDocument.swift */; };
+		52876ED01D7718C300DE890B /* TidyLibraryBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52876ECF1D7718C300DE890B /* TidyLibraryBridge.swift */; };
 		52BD26C31D76F5E500E5CF6A /* TidyFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 52BD26C21D76F5E500E5CF6A /* TidyFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		52BD26CA1D76F5E500E5CF6A /* TidyFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52BD26BF1D76F5E500E5CF6A /* TidyFramework.framework */; };
 		52BD26CF1D76F5E500E5CF6A /* TidyFrameworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52BD26CE1D76F5E500E5CF6A /* TidyFrameworkTests.swift */; };
@@ -23,6 +27,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		520933751D7720B400056BA0 /* Tidy */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Tidy; sourceTree = "<group>"; };
+		520933771D77214700056BA0 /* TidyTestSuite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TidyTestSuite.swift; path = ../TidyFramework/TidyTestSuite.swift; sourceTree = "<group>"; };
+		5209337C1D773C9F00056BA0 /* TidyDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TidyDocument.swift; sourceTree = "<group>"; };
+		52876ECF1D7718C300DE890B /* TidyLibraryBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TidyLibraryBridge.swift; sourceTree = "<group>"; };
 		52BD26BF1D76F5E500E5CF6A /* TidyFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TidyFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		52BD26C21D76F5E500E5CF6A /* TidyFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TidyFramework.h; sourceTree = "<group>"; };
 		52BD26C41D76F5E500E5CF6A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -50,9 +58,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5209337B1D773C9200056BA0 /* TidyDocument */ = {
+			isa = PBXGroup;
+			children = (
+				5209337C1D773C9F00056BA0 /* TidyDocument.swift */,
+			);
+			name = TidyDocument;
+			sourceTree = "<group>";
+		};
 		52BD26B51D76F5E500E5CF6A = {
 			isa = PBXGroup;
 			children = (
+				520933751D7720B400056BA0 /* Tidy */,
 				52BD26C11D76F5E500E5CF6A /* TidyFramework */,
 				52BD26CD1D76F5E500E5CF6A /* TidyFrameworkTests */,
 				52BD26C01D76F5E500E5CF6A /* Products */,
@@ -71,6 +88,8 @@
 		52BD26C11D76F5E500E5CF6A /* TidyFramework */ = {
 			isa = PBXGroup;
 			children = (
+				5209337B1D773C9200056BA0 /* TidyDocument */,
+				52BD26D91D76F76600E5CF6A /* TidyLibraryBridge */,
 				52BD26C21D76F5E500E5CF6A /* TidyFramework.h */,
 				52BD26C41D76F5E500E5CF6A /* Info.plist */,
 			);
@@ -80,10 +99,19 @@
 		52BD26CD1D76F5E500E5CF6A /* TidyFrameworkTests */ = {
 			isa = PBXGroup;
 			children = (
+				520933771D77214700056BA0 /* TidyTestSuite.swift */,
 				52BD26CE1D76F5E500E5CF6A /* TidyFrameworkTests.swift */,
 				52BD26D01D76F5E500E5CF6A /* Info.plist */,
 			);
 			path = TidyFrameworkTests;
+			sourceTree = "<group>";
+		};
+		52BD26D91D76F76600E5CF6A /* TidyLibraryBridge */ = {
+			isa = PBXGroup;
+			children = (
+				52876ECF1D7718C300DE890B /* TidyLibraryBridge.swift */,
+			);
+			name = TidyLibraryBridge;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -177,6 +205,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				520933761D7720B400056BA0 /* Tidy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,6 +223,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5209337D1D773C9F00056BA0 /* TidyDocument.swift in Sources */,
+				520933781D77214700056BA0 /* TidyTestSuite.swift in Sources */,
+				52876ED01D7718C300DE890B /* TidyLibraryBridge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,6 +339,7 @@
 		52BD26D41D76F5E500E5CF6A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -316,15 +349,26 @@
 				INFOPLIST_FILE = TidyFramework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib/,
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ltidy",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = LCPlusPlus.TidyFramework;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_INCLUDE_PATHS = "\"$(SRCROOT)/Tidy\"";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		52BD26D51D76F5E500E5CF6A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -334,9 +378,18 @@
 				INFOPLIST_FILE = TidyFramework/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/opt/local/lib/,
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ltidy",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = LCPlusPlus.TidyFramework;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_INCLUDE_PATHS = "\"$(SRCROOT)/Tidy\"";
 			};
 			name = Release;
 		};
@@ -381,6 +434,7 @@
 				52BD26D51D76F5E500E5CF6A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		52BD26D61D76F5E500E5CF6A /* Build configuration list for PBXNativeTarget "TidyFrameworkTests" */ = {
 			isa = XCConfigurationList;
@@ -389,6 +443,7 @@
 				52BD26D81D76F5E500E5CF6A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

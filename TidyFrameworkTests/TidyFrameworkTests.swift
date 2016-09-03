@@ -24,6 +24,14 @@ class TidyFrameworkTests: XCTestCase {
     func testExample() {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
+        
+        // TEST- testTidy should return a value that is > 0. Otherwise the tidy library
+        XCTAssert(testTidy()>0, "Something is wrong with the Tidy library, because an error has occurred.")
+        
+        let tidyDocument = TidyDocument()
+        XCTAssert(tidyDocument.markupOptions.anchorAsName==YesNo.yes)
+        XCTAssert(tidyDocument.characterEncodingOptions.charEncoding==CharacterEncoding.utf8)
+        
     }
     
     func testPerformanceExample() {
@@ -31,6 +39,8 @@ class TidyFrameworkTests: XCTestCase {
         self.measureBlock {
             // Put the code you want to measure the time of here.
         }
+        
+       
     }
     
 }
