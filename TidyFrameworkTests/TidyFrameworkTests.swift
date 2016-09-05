@@ -23,164 +23,181 @@ class TidyFrameworkTests: XCTestCase {
     }
     
     func testTidyDocumentCreation() {
-
+        
         // TEST - testTidy should return a value that is > 0. Otherwise the tidy library
         XCTAssert(testTidy()>0, "Something is wrong with the Tidy library, because an error has occurred.")
     }
     
     func testDefaultOptions() {
         
-        // TEST - These are the defaults that should be read in a new Tidy Document.
         let tidyDocument = TidyDocument()
-        XCTAssert(tidyDocument.miscellaneousOptions.writeBack == YesNo.no)
+        
+        // TEST - These are the defaults that should be read in a new Tidy Document.
+        XCTAssert(tidyDocument.miscellaneousOptions.writeBack == .no)
         XCTAssert(tidyDocument.miscellaneousOptions.errorFile == nil)
         XCTAssert(tidyDocument.miscellaneousOptions.gnuEmacsFile == nil)
-        XCTAssert(tidyDocument.miscellaneousOptions.keepTime == YesNo.no)
-        XCTAssert(tidyDocument.miscellaneousOptions.quiet == YesNo.no)
-        XCTAssert(tidyDocument.miscellaneousOptions.gnuEmacs == YesNo.no)
-        XCTAssert(tidyDocument.miscellaneousOptions.tidyMark == YesNo.yes)
+        XCTAssert(tidyDocument.miscellaneousOptions.keepTime == .no)
+        XCTAssert(tidyDocument.miscellaneousOptions.quiet == .no)
+        XCTAssert(tidyDocument.miscellaneousOptions.gnuEmacs == .no)
+        XCTAssert(tidyDocument.miscellaneousOptions.tidyMark == .yes)
         XCTAssert(tidyDocument.miscellaneousOptions.outputFile == nil)
-        XCTAssert(tidyDocument.miscellaneousOptions.forceOutput == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.outputXml == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.joinClasses == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.encloseText == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.indentCdata == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.mergeSpans == TriState.auto)
-        XCTAssert(tidyDocument.markupOptions.fixBackslash == YesNo.yes)
-        XCTAssert(tidyDocument.markupOptions.clean == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.doctype == DocType.auto)
-        XCTAssert(tidyDocument.markupOptions.dropProprietaryAttributes == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.uppercaseTags == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.quoteMarks == YesNo.no)
+        XCTAssert(tidyDocument.miscellaneousOptions.forceOutput == .no)
+        XCTAssert(tidyDocument.markupOptions.outputXml == .no)
+        XCTAssert(tidyDocument.markupOptions.joinClasses == .no)
+        XCTAssert(tidyDocument.markupOptions.encloseText == .no)
+        XCTAssert(tidyDocument.markupOptions.indentCdata == .no)
+        XCTAssert(tidyDocument.markupOptions.mergeSpans == .auto)
+        XCTAssert(tidyDocument.markupOptions.fixBackslash == .yes)
+        XCTAssert(tidyDocument.markupOptions.clean == .no)
+        XCTAssert(tidyDocument.markupOptions.doctype == .auto)
+        XCTAssert(tidyDocument.markupOptions.dropProprietaryAttributes == .no)
+        XCTAssert(tidyDocument.markupOptions.uppercaseTags == .no)
+        XCTAssert(tidyDocument.markupOptions.quoteMarks == .no)
         XCTAssert(tidyDocument.markupOptions.cssPrefix == nil)
         XCTAssert(tidyDocument.markupOptions.userDoctype == nil)
-        XCTAssert(tidyDocument.markupOptions.outputHtml == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.joinStyles == YesNo.yes)
-        XCTAssert(tidyDocument.markupOptions.decorateInferredUl == YesNo.no)
+        XCTAssert(tidyDocument.markupOptions.outputHtml == .no)
+        XCTAssert(tidyDocument.markupOptions.joinStyles == .yes)
+        XCTAssert(tidyDocument.markupOptions.decorateInferredUl == .no)
         XCTAssert(tidyDocument.markupOptions.newPreTags == nil)
         XCTAssert(tidyDocument.markupOptions.altText == nil)
-        XCTAssert(tidyDocument.markupOptions.lowerLiterals == YesNo.yes)
-        XCTAssert(tidyDocument.markupOptions.coerceEndtags == YesNo.yes)
+        XCTAssert(tidyDocument.markupOptions.lowerLiterals == .yes)
+        XCTAssert(tidyDocument.markupOptions.coerceEndtags == .yes)
         XCTAssert(tidyDocument.markupOptions.newInlineTags == nil)
-        XCTAssert(tidyDocument.markupOptions.literalAttributes == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.anchorAsName == YesNo.yes)
-        XCTAssert(tidyDocument.markupOptions.addXmlSpace == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.inputXml == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.skipNested == YesNo.yes)
-        XCTAssert(tidyDocument.markupOptions.dropEmptyParas == YesNo.yes)
-        XCTAssert(tidyDocument.markupOptions.replaceColor == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.mergeEmphasis == YesNo.yes)
-        XCTAssert(tidyDocument.markupOptions.addXmlDecl == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.bare == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.hideEndtags == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.outputXhtml == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.uppercaseAttributes == YesNo.no)
+        XCTAssert(tidyDocument.markupOptions.literalAttributes == .no)
+        XCTAssert(tidyDocument.markupOptions.anchorAsName == .yes)
+        XCTAssert(tidyDocument.markupOptions.addXmlSpace == .no)
+        XCTAssert(tidyDocument.markupOptions.inputXml == .no)
+        XCTAssert(tidyDocument.markupOptions.skipNested == .yes)
+        XCTAssert(tidyDocument.markupOptions.dropEmptyParas == .yes)
+        XCTAssert(tidyDocument.markupOptions.replaceColor == .no)
+        XCTAssert(tidyDocument.markupOptions.mergeEmphasis == .yes)
+        XCTAssert(tidyDocument.markupOptions.addXmlDecl == .no)
+        XCTAssert(tidyDocument.markupOptions.bare == .no)
+        XCTAssert(tidyDocument.markupOptions.hideEndtags == .no)
+        XCTAssert(tidyDocument.markupOptions.outputXhtml == .no)
+        XCTAssert(tidyDocument.markupOptions.uppercaseAttributes == .no)
         XCTAssert(tidyDocument.markupOptions.newEmptyTags == nil)
-        XCTAssert(tidyDocument.markupOptions.preserveEntities == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.numericEntities == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.dropFontTags == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.quoteNbsp == YesNo.yes)
-        XCTAssert(tidyDocument.markupOptions.dropEmptyElements == YesNo.yes)
-        XCTAssert(tidyDocument.markupOptions.logicalEmphasis == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.omitOptionalTags == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.encloseBlockText == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.escapeCdata == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.showBodyOnly == TriState.no)
-        XCTAssert(tidyDocument.markupOptions.mergeDivs == TriState.auto)
-        XCTAssert(tidyDocument.markupOptions.gdoc == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.word2000 == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.repeatedAttributes == RepeatedAttributeModes.keepLast)
-        XCTAssert(tidyDocument.markupOptions.quoteAmpersand == YesNo.yes)
-        XCTAssert(tidyDocument.markupOptions.fixBadComments == YesNo.yes)
-        XCTAssert(tidyDocument.markupOptions.strictTagsAttributes == YesNo.no)
+        XCTAssert(tidyDocument.markupOptions.preserveEntities == .no)
+        XCTAssert(tidyDocument.markupOptions.numericEntities == .no)
+        XCTAssert(tidyDocument.markupOptions.dropFontTags == .no)
+        XCTAssert(tidyDocument.markupOptions.quoteNbsp == .yes)
+        XCTAssert(tidyDocument.markupOptions.dropEmptyElements == .yes)
+        XCTAssert(tidyDocument.markupOptions.logicalEmphasis == .no)
+        XCTAssert(tidyDocument.markupOptions.omitOptionalTags == .no)
+        XCTAssert(tidyDocument.markupOptions.encloseBlockText == .no)
+        XCTAssert(tidyDocument.markupOptions.escapeCdata == .no)
+        XCTAssert(tidyDocument.markupOptions.showBodyOnly == .no)
+        XCTAssert(tidyDocument.markupOptions.mergeDivs == .auto)
+        XCTAssert(tidyDocument.markupOptions.gdoc == .no)
+        XCTAssert(tidyDocument.markupOptions.word2000 == .no)
+        XCTAssert(tidyDocument.markupOptions.repeatedAttributes == .keepLast)
+        XCTAssert(tidyDocument.markupOptions.quoteAmpersand == .yes)
+        XCTAssert(tidyDocument.markupOptions.fixBadComments == .yes)
+        XCTAssert(tidyDocument.markupOptions.strictTagsAttributes == .no)
         XCTAssert(tidyDocument.markupOptions.newBlocklevelTags == nil)
-        XCTAssert(tidyDocument.markupOptions.fixUri == YesNo.yes)
-        XCTAssert(tidyDocument.markupOptions.assumeXmlProcins == YesNo.no)
-        XCTAssert(tidyDocument.markupOptions.hideComments == YesNo.no)
+        XCTAssert(tidyDocument.markupOptions.fixUri == .yes)
+        XCTAssert(tidyDocument.markupOptions.assumeXmlProcins == .no)
+        XCTAssert(tidyDocument.markupOptions.hideComments == .no)
         XCTAssert(tidyDocument.prettyPrintOptions.indentSpaces == 2)
-        XCTAssert(tidyDocument.prettyPrintOptions.escapeScripts == YesNo.yes)
-        XCTAssert(tidyDocument.prettyPrintOptions.indentWithTabs == YesNo.no)
+        XCTAssert(tidyDocument.prettyPrintOptions.escapeScripts == .yes)
+        XCTAssert(tidyDocument.prettyPrintOptions.indentWithTabs == .no)
         XCTAssert(tidyDocument.prettyPrintOptions.tabSize == 8)
         XCTAssert(tidyDocument.prettyPrintOptions.wrap == 68)
-        XCTAssert(tidyDocument.prettyPrintOptions.indent == TriState.no)
-        XCTAssert(tidyDocument.prettyPrintOptions.verticalSpace == TriState.no)
-        XCTAssert(tidyDocument.prettyPrintOptions.wrapSections == YesNo.yes)
-        XCTAssert(tidyDocument.prettyPrintOptions.markup == YesNo.yes)
-        XCTAssert(tidyDocument.prettyPrintOptions.sortAttributes == AttributeSortStrategy.none)
-        XCTAssert(tidyDocument.prettyPrintOptions.wrapAttributes == YesNo.no)
-        XCTAssert(tidyDocument.prettyPrintOptions.indentAttributes == YesNo.no)
-        XCTAssert(tidyDocument.prettyPrintOptions.wrapJste == YesNo.yes)
-        XCTAssert(tidyDocument.prettyPrintOptions.breakBeforeBr == YesNo.no)
-        XCTAssert(tidyDocument.prettyPrintOptions.wrapPhp == YesNo.yes)
-        XCTAssert(tidyDocument.prettyPrintOptions.wrapScriptLiterals == YesNo.no)
-        XCTAssert(tidyDocument.prettyPrintOptions.wrapAsp == YesNo.yes)
-        XCTAssert(tidyDocument.diagnosticsOptions.showInfo == YesNo.yes)
-        XCTAssert(tidyDocument.diagnosticsOptions.showWarnings == YesNo.yes)
+        XCTAssert(tidyDocument.prettyPrintOptions.indent == .no)
+        XCTAssert(tidyDocument.prettyPrintOptions.verticalSpace == .no)
+        XCTAssert(tidyDocument.prettyPrintOptions.wrapSections == .yes)
+        XCTAssert(tidyDocument.prettyPrintOptions.markup == .yes)
+        XCTAssert(tidyDocument.prettyPrintOptions.sortAttributes == .none)
+        XCTAssert(tidyDocument.prettyPrintOptions.wrapAttributes == .no)
+        XCTAssert(tidyDocument.prettyPrintOptions.indentAttributes == .no)
+        XCTAssert(tidyDocument.prettyPrintOptions.wrapJste == .yes)
+        XCTAssert(tidyDocument.prettyPrintOptions.breakBeforeBr == .no)
+        XCTAssert(tidyDocument.prettyPrintOptions.wrapPhp == .yes)
+        XCTAssert(tidyDocument.prettyPrintOptions.wrapScriptLiterals == .no)
+        XCTAssert(tidyDocument.prettyPrintOptions.wrapAsp == .yes)
+        XCTAssert(tidyDocument.diagnosticsOptions.showInfo == .yes)
+        XCTAssert(tidyDocument.diagnosticsOptions.showWarnings == .yes)
         XCTAssert(tidyDocument.diagnosticsOptions.showErrors == 6)
-        XCTAssert(tidyDocument.diagnosticsOptions.accessibilityCheck == AccessibilityCheckLevel.classic)
-        XCTAssert(tidyDocument.characterEncodingOptions.charEncoding == CharacterEncoding.utf8)
-        XCTAssert(tidyDocument.characterEncodingOptions.outputEncoding == CharacterEncoding.utf8)
-        XCTAssert(tidyDocument.characterEncodingOptions.asciiChars == YesNo.no)
-        XCTAssert(tidyDocument.characterEncodingOptions.newline == NewlineType.LF)
-        XCTAssert(tidyDocument.characterEncodingOptions.inputEncoding == CharacterEncoding.utf8)
-        
-        /*** Uncomment the following lines to generate the test code
-         func generateTestCode() {
-         print("===============================")
-         print("List of Options")
-         print("===============================")
-         
-         for child in Mirror(reflecting: tidyDocument).children.filter({ $0.value is TidyOptions })  {
-         
-         let optionGroup = child.value
-         let optionGroupName = child.label!
-         
-         for child in Mirror(reflecting: optionGroup).children {
-         
-         let optionName = child.label!
-         let option = child.value
-         
-         let typePrefix: String
-         
-         switch option {
-         
-         case is String, is Int:
-         typePrefix = ""
-         
-         default:
-         typePrefix = "\(option.dynamicType)."
-         
-         }
-         
-         print("XCTAssert(tidyDocument.\(optionGroupName).\(optionName) == \(typePrefix)\(option))")
-         
-         }
-         
-         }
-         
-         print("===============================")
-         }
-         
-         generateTestCode()
-         ***/
+        XCTAssert(tidyDocument.diagnosticsOptions.accessibilityCheck == .classic)
+        XCTAssert(tidyDocument.characterEncodingOptions.charEncoding == .utf8)
+        XCTAssert(tidyDocument.characterEncodingOptions.outputEncoding == .utf8)
+        XCTAssert(tidyDocument.characterEncodingOptions.asciiChars == .no)
+        XCTAssert(tidyDocument.characterEncodingOptions.newline == .LF)
+        XCTAssert(tidyDocument.characterEncodingOptions.inputEncoding == .utf8)
         
     }
     
     func testSettingOptions() {
         
-        // Some tests to make sure that setting options works
+        // TEST - Some tests to make sure that setting options works
         
         let tidyDocument = TidyDocument()
         
         tidyDocument.prettyPrintOptions.indentSpaces = 234
-        XCTAssert(tidyDocument.prettyPrintOptions.indentSpaces==234)
+        XCTAssert(tidyDocument.prettyPrintOptions.indentSpaces == 234)
         
         tidyDocument.miscellaneousOptions.errorFile = "foobar"
-        XCTAssert(tidyDocument.miscellaneousOptions.errorFile=="foobar")
+        XCTAssert(tidyDocument.miscellaneousOptions.errorFile == "foobar")
+        
+        tidyDocument.miscellaneousOptions.forceOutput = .yes
+        XCTAssert(tidyDocument.miscellaneousOptions.forceOutput == .yes)
+        
+        tidyDocument.markupOptions.mergeSpans = .no
+        XCTAssert(tidyDocument.markupOptions.mergeSpans == .no)
+        
+        tidyDocument.resetAllOptionsToDefaults()
+        XCTAssert(tidyDocument.prettyPrintOptions.indentSpaces == 2)
+        XCTAssert(tidyDocument.miscellaneousOptions.errorFile == nil)
+        XCTAssert(tidyDocument.miscellaneousOptions.forceOutput == .no)
+        XCTAssert(tidyDocument.markupOptions.mergeSpans == .auto)
+
+        // TEST - Doctype
+        
+        // The following is a user-defined doctype (taken from the API).
+        // It should work, and the doctype mode shoudl change from `auto` to `user`:
+        XCTAssert(tidyDocument.markupOptions.doctype == .auto)
+        tidyDocument.markupOptions.userDoctype = "-//ACME//DTD HTML 3.14159//EN"
+        XCTAssert(tidyDocument.markupOptions.userDoctype == "-//ACME//DTD HTML 3.14159//EN")
+        XCTAssert(tidyDocument.markupOptions.doctype == .user)
+        
+        // It is possible to do dumb things like set the user doctype to "" or nil,
+        // and the doctype mode will still be changed to `user`. (That is Tidy's fault, though.)
+        tidyDocument.markupOptions.userDoctype = "-//ACME//DTD HTML 3.14159//EN"
+        tidyDocument.markupOptions.doctype = .auto
+        tidyDocument.markupOptions.userDoctype = ""
+        XCTAssert(tidyDocument.markupOptions.userDoctype == nil)
+        XCTAssert(tidyDocument.markupOptions.doctype == .user)
+        
+        tidyDocument.markupOptions.userDoctype = "-//ACME//DTD HTML 3.14159//EN"
+        tidyDocument.markupOptions.doctype = .auto
+        tidyDocument.markupOptions.userDoctype = nil
+        XCTAssert(tidyDocument.markupOptions.userDoctype == nil)
+        XCTAssert(tidyDocument.markupOptions.doctype == .user)
+        
+        tidyDocument.markupOptions.userDoctype = "-//ACME//DTD HTML 3.14159//EN"
+        tidyDocument.markupOptions.doctype = .auto
+        tidyDocument.markupOptions.userDoctype = "\""
+        XCTAssert(tidyDocument.markupOptions.userDoctype == nil)
+        XCTAssert(tidyDocument.markupOptions.doctype == .user)
+        
+        tidyDocument.markupOptions.userDoctype = "-//ACME//DTD HTML 3.14159//EN"
+        tidyDocument.markupOptions.doctype = .auto
+        tidyDocument.markupOptions.userDoctype = "\"\""
+        XCTAssert(tidyDocument.markupOptions.userDoctype == nil)
+        XCTAssert(tidyDocument.markupOptions.doctype == .user)
+        
+        // Tidy will change the doctype mode to `user` even if the
+        // user doctype is unchanged:
+        tidyDocument.markupOptions.userDoctype = "-//ACME//DTD HTML 3.14159//EN"
+        tidyDocument.markupOptions.doctype = .auto
+        tidyDocument.markupOptions.userDoctype = "-//ACME//DTD HTML 3.14159//EN"
+        XCTAssert(tidyDocument.markupOptions.userDoctype == "-//ACME//DTD HTML 3.14159//EN")
+        XCTAssert(tidyDocument.markupOptions.doctype == .user)
         
     }
     
     func testPerformanceExample() {
+        
         // This is an example of a performance test case.
         self.measureBlock {
             // Put the code you want to measure the time of here.

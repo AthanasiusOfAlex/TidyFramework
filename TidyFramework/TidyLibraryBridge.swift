@@ -630,7 +630,7 @@ struct MarkupOptions: TidyOptions {
         
         set {
             
-            tidyOptParseValue(tidyDoc, "doctype", "\(newValue ?? "")")
+            tidyOptParseValue(tidyDoc, "doctype", "\"\(newValue ?? "")\"")
             
         }
         

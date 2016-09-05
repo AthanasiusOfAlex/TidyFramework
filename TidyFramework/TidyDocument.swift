@@ -20,7 +20,11 @@ class TidyDocument {
     var diagnosticsOptions: DiagnosticsOptions
     var characterEncodingOptions: CharacterEncodingOptions
     
-    deinit { tidyRelease(tidyDoc) }
+    deinit {
+        
+        tidyRelease(tidyDoc)
+    
+    }
     
     init() {
         
@@ -30,6 +34,12 @@ class TidyDocument {
         diagnosticsOptions = DiagnosticsOptions(tidyDoc: tidyDoc)
         characterEncodingOptions = CharacterEncodingOptions(tidyDoc: tidyDoc)
     
+    }
+    
+    func resetAllOptionsToDefaults() {
+        
+        tidyOptResetAllToDefault(tidyDoc)
+        
     }
     
 }
