@@ -14,28 +14,46 @@ import TidyBufferIO
 // MARK - make it possible to convert a ctmbstr to a string.
 extension String {
     
-    init(_ tidyConstantString: ctmbstr) {
-        
-        var result = ""
-        var moveableReference = tidyConstantString
+// Old implementation (which still works)
+//    init?(_ tidyConstantString: ctmbstr) {
+//        
+//        if tidyConstantString.hashValue==0 { return nil }
+//        
+//        var result = ""
+//        var moveableReference = tidyConstantString
+//        
+//        // This had better be a null-terminated string!!!
+//        while true {
+//            
+//            let byte = Int(moveableReference.memory)
+//            if byte==0 { break }
+//            
+//            moveableReference = moveableReference.successor()
+//            
+//            let unicodeScalar = UnicodeScalar(byte)
+//            
+//            result.append(unicodeScalar)
+//            
+//        }
+//        
+//        self = result
+//        
+//    }
 
-        // This had better be a null-terminated string!!!
-        while true {
+    init?(_ tidyConstantString: ctmbstr) {
+        
+        if let swiftString = String.fromCString(tidyConstantString) {
             
-            let byte = Int(moveableReference.memory)
-            if byte==0 { break }
+            self = swiftString
             
-            moveableReference = moveableReference.successor()
+        } else {
             
-            let unicodeScalar = UnicodeScalar(byte)
-            
-            result.append(unicodeScalar)
+            return nil
             
         }
         
-        self = result
-        
     }
+    
     
 }
 
@@ -56,6 +74,7 @@ enum YesNo {
             
         default:
             self = YesNo.no
+            assert(false, "A bad value was used to initilize this enum. Check API.")
             
         }
         
@@ -70,10 +89,11 @@ enum DocType: String {
     case auto
     case strict
     case loose
+    case user
     
     init(_ tidyRawValue: ctmbstr) {
         
-        guard let value = DocType(rawValue: String(tidyRawValue)) else {
+        guard let rawValue = String(tidyRawValue), let value = DocType(rawValue: rawValue) else {
             
             assert(false, "A bad value was used to initilize this enum. Check API.")
             
@@ -93,7 +113,7 @@ enum TriState: String {
     
     init(_ tidyRawValue: ctmbstr) {
         
-        guard let value = TriState(rawValue: String(tidyRawValue)) else {
+        guard let rawValue = String(tidyRawValue), let value = TriState(rawValue: rawValue) else {
             
             assert(false, "A bad value was used to initilize this enum. Check API.")
             
@@ -113,7 +133,7 @@ enum NewlineType: String {
     
     init(_ tidyRawValue: ctmbstr) {
         
-        guard let value = NewlineType(rawValue: String(tidyRawValue)) else {
+        guard let rawValue = String(tidyRawValue), let value = NewlineType(rawValue: rawValue) else {
             
             assert(false, "A bad value was used to initilize this enum. Check API.")
             
@@ -132,7 +152,11 @@ enum RepeatedAttributeModes: String {
     
     init(_ tidyRawValue: ctmbstr) {
         
-        let tidyRawValue = String(tidyRawValue)
+        guard let tidyRawValue = String(tidyRawValue) else {
+            
+            assert(false, "A nil (i.e., no value) was used to initilize this enum. Check API.")
+        
+        }
         
         switch tidyRawValue {
             
@@ -179,7 +203,7 @@ enum AttributeSortStrategy: String {
     
     init(_ tidyRawValue: ctmbstr) {
         
-        guard let value = AttributeSortStrategy(rawValue: String(tidyRawValue)) else {
+        guard let rawValue = String(tidyRawValue), let value = AttributeSortStrategy(rawValue: rawValue) else {
             
             assert(false, "A bad value was used to initilize this enum. Check API.")
             
@@ -210,7 +234,7 @@ enum CharacterEncoding: String {
     
     init(_ tidyRawValue: ctmbstr) {
         
-        guard let value = CharacterEncoding(rawValue: String(tidyRawValue)) else {
+        guard let rawValue = String(tidyRawValue), let value = CharacterEncoding(rawValue: rawValue) else {
             
             assert(false, "A bad value was used to initilize this enum. Check API.")
             
@@ -224,30 +248,154 @@ enum CharacterEncoding: String {
 
 protocol TidyOptions { }
 
-
 //======================
 // Group: MiscellaneousOptions
 //======================
 struct MiscellaneousOptions: TidyOptions {
     
-    var writeBack: YesNo
-    var errorFile: String?
-    var gnuEmacsFile: String?
-    var keepTime: YesNo
-    var quiet: YesNo
-    var gnuEmacs: YesNo
-    var tidyMark: YesNo
-    var outputFile: String?
-    var forceOutput: YesNo
+    var tidyDoc: TidyDoc
     
-    init(tidyDoc: TidyDoc) {
+    var writeBack: YesNo {
         
-        writeBack = YesNo(tidyOptGetBool(tidyDoc, TidyWriteBack))
-        keepTime = YesNo(tidyOptGetBool(tidyDoc, TidyKeepFileTimes))
-        quiet = YesNo(tidyOptGetBool(tidyDoc, TidyQuiet))
-        gnuEmacs = YesNo(tidyOptGetBool(tidyDoc, TidyEmacs))
-        tidyMark = YesNo(tidyOptGetBool(tidyDoc, TidyMark))
-        forceOutput = YesNo(tidyOptGetBool(tidyDoc, TidyForceOutput))
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyWriteBack))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "write-back", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var errorFile: String? {
+        
+        get {
+            
+            return String(tidyOptGetValue(tidyDoc, TidyErrFile))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "error-file", "\(newValue ?? "")")
+            
+        }
+        
+    }
+    
+    var gnuEmacsFile: String? {
+        
+        get {
+            
+            return String(tidyOptGetValue(tidyDoc, TidyEmacsFile))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "gnu-emacs-file", "\(newValue ?? "")")
+            
+        }
+        
+    }
+    
+    var keepTime: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyKeepFileTimes))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "keep-time", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var quiet: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyQuiet))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "quiet", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var gnuEmacs: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyEmacs))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "gnu-emacs", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var tidyMark: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyMark))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "tidy-mark", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var outputFile: String? {
+        
+        get {
+            
+            return String(tidyOptGetValue(tidyDoc, TidyOutFile))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "output-file", "\(newValue ?? "")")
+            
+        }
+        
+    }
+    
+    var forceOutput: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyForceOutput))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "force-output", "\(newValue)")
+            
+        }
         
     }
     
@@ -258,124 +406,921 @@ struct MiscellaneousOptions: TidyOptions {
 //======================
 struct MarkupOptions: TidyOptions {
     
-    var outputXml: YesNo
-    var joinClasses: YesNo
-    var encloseText: YesNo
-    var indentCdata: YesNo
-    var mergeSpans: TriState
-    var fixBackslash: YesNo
-    var clean: YesNo
+    var tidyDoc: TidyDoc
+    
+    var outputXml: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyXmlOut))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "output-xml", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var joinClasses: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyJoinClasses))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "join-classes", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var encloseText: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyEncloseBodyText))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "enclose-text", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var indentCdata: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyIndentCdata))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "indent-cdata", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var mergeSpans: TriState {
+        
+        get {
+            
+            return TriState(tidyOptGetCurrPick(tidyDoc, TidyMergeSpans))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "merge-spans", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var fixBackslash: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyFixBackslash))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "fix-backslash", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var clean: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyMakeClean))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "clean", "\(newValue)")
+            
+        }
+        
+    }
+    
     
     #if SUPPORT_ASIAN_ENCODINGS
-    var ncr: YesNo
+    var ncr: YesNo {
+    
+    get {
+    
+    return YesNo(tidyOptGetBool(tidyDoc, TidyNCR))
+    
+    }
+    
+    set {
+    
+    tidyOptParseValue(tidyDoc, "ncr", "\(newValue)")
+    
+    }
+    
+    }
     #endif
     
-    var doctype: DocType
-    var dropProprietaryAttributes: YesNo
-    var uppercaseTags: YesNo
-    var quoteMarks: YesNo
-    var cssPrefix: String?
-    var userDoctype: String?
-    var outputHtml: YesNo
-    var joinStyles: YesNo
-    var decorateInferredUl: YesNo
-    var newPreTags: String?
-    var altText: String?
-    var lowerLiterals: YesNo
-    var coerceEndtags: YesNo
-    var newInlineTags: String?
-    var literalAttributes: YesNo
-    var anchorAsName: YesNo
-    var addXmlSpace: YesNo
-    var inputXml: YesNo
-    var skipNested: YesNo
-    var dropEmptyParas: YesNo
-    var replaceColor: YesNo
-    var mergeEmphasis: YesNo
-    var addXmlDecl: YesNo
-    var bare: YesNo
-    var hideEndtags: YesNo
-    var outputXhtml: YesNo
-    var uppercaseAttributes: YesNo
-    var newEmptyTags: String?
-    var preserveEntities: YesNo
-    var numericEntities: YesNo
-    var dropFontTags: YesNo
-    var quoteNbsp: YesNo
-    var dropEmptyElements: YesNo
-    var logicalEmphasis: YesNo
-    var omitOptionalTags: YesNo
-    var encloseBlockText: YesNo
-    var escapeCdata: YesNo
-    var showBodyOnly: TriState
-    var mergeDivs: TriState
-    var gdoc: YesNo
-    var word2000: YesNo
-    var repeatedAttributes: RepeatedAttributeModes
-    var quoteAmpersand: YesNo
-    var fixBadComments: YesNo
-    var strictTagsAttributes: YesNo
-    var newBlocklevelTags: String?
-    var fixUri: YesNo
-    var assumeXmlProcins: YesNo
-    var hideComments: YesNo
     
-    init(tidyDoc: TidyDoc) {
+    var doctype: DocType {
         
-        outputXml = YesNo(tidyOptGetBool(tidyDoc, TidyXmlOut))
-        joinClasses = YesNo(tidyOptGetBool(tidyDoc, TidyJoinClasses))
-        encloseText = YesNo(tidyOptGetBool(tidyDoc, TidyEncloseBodyText))
-        indentCdata = YesNo(tidyOptGetBool(tidyDoc, TidyIndentCdata))
-        mergeSpans = TriState(tidyOptGetCurrPick(tidyDoc, TidyMergeSpans))
-        fixBackslash = YesNo(tidyOptGetBool(tidyDoc, TidyFixBackslash))
-        clean = YesNo(tidyOptGetBool(tidyDoc, TidyMakeClean))
+        get {
+            
+            return DocType(tidyOptGetCurrPick(tidyDoc, TidyDoctypeMode))
+            
+        }
         
-        #if SUPPORT_ASIAN_ENCODINGS
-            ncr = YesNo(tidyOptGetBool(tidyDoc, TidyNCR))
-        #endif
+        set {
+            
+            tidyOptParseValue(tidyDoc, "doctype", "\(newValue)")
+            
+        }
         
-        doctype = DocType(tidyOptGetCurrPick(tidyDoc, TidyDoctypeMode))
-        dropProprietaryAttributes = YesNo(tidyOptGetBool(tidyDoc, TidyDropPropAttrs))
-        uppercaseTags = YesNo(tidyOptGetBool(tidyDoc, TidyUpperCaseTags))
-        quoteMarks = YesNo(tidyOptGetBool(tidyDoc, TidyQuoteMarks))
-        outputHtml = YesNo(tidyOptGetBool(tidyDoc, TidyHtmlOut))
-        joinStyles = YesNo(tidyOptGetBool(tidyDoc, TidyJoinStyles))
-        decorateInferredUl = YesNo(tidyOptGetBool(tidyDoc, TidyDecorateInferredUL))
-        lowerLiterals = YesNo(tidyOptGetBool(tidyDoc, TidyLowerLiterals))
-        coerceEndtags = YesNo(tidyOptGetBool(tidyDoc, TidyCoerceEndTags))
-        literalAttributes = YesNo(tidyOptGetBool(tidyDoc, TidyLiteralAttribs))
-        anchorAsName = YesNo(tidyOptGetBool(tidyDoc, TidyAnchorAsName))
-        addXmlSpace = YesNo(tidyOptGetBool(tidyDoc, TidyXmlSpace))
-        inputXml = YesNo(tidyOptGetBool(tidyDoc, TidyXmlTags))
-        skipNested = YesNo(tidyOptGetBool(tidyDoc, TidySkipNested))
-        dropEmptyParas = YesNo(tidyOptGetBool(tidyDoc, TidyDropEmptyParas))
-        replaceColor = YesNo(tidyOptGetBool(tidyDoc, TidyReplaceColor))
-        mergeEmphasis = YesNo(tidyOptGetBool(tidyDoc, TidyMergeEmphasis))
-        addXmlDecl = YesNo(tidyOptGetBool(tidyDoc, TidyXmlDecl))
-        bare = YesNo(tidyOptGetBool(tidyDoc, TidyMakeBare))
-        hideEndtags = YesNo(tidyOptGetBool(tidyDoc, TidyHideEndTags))
-        outputXhtml = YesNo(tidyOptGetBool(tidyDoc, TidyXhtmlOut))
-        uppercaseAttributes = YesNo(tidyOptGetBool(tidyDoc, TidyUpperCaseAttrs))
-        preserveEntities = YesNo(tidyOptGetBool(tidyDoc, TidyPreserveEntities))
-        numericEntities = YesNo(tidyOptGetBool(tidyDoc, TidyNumEntities))
-        dropFontTags = YesNo(tidyOptGetBool(tidyDoc, TidyDropFontTags))
-        quoteNbsp = YesNo(tidyOptGetBool(tidyDoc, TidyQuoteNbsp))
-        dropEmptyElements = YesNo(tidyOptGetBool(tidyDoc, TidyDropEmptyElems))
-        logicalEmphasis = YesNo(tidyOptGetBool(tidyDoc, TidyLogicalEmphasis))
-        omitOptionalTags = YesNo(tidyOptGetBool(tidyDoc, TidyOmitOptionalTags))
-        encloseBlockText = YesNo(tidyOptGetBool(tidyDoc, TidyEncloseBlockText))
-        escapeCdata = YesNo(tidyOptGetBool(tidyDoc, TidyEscapeCdata))
-        showBodyOnly = TriState(tidyOptGetCurrPick(tidyDoc, TidyBodyOnly))
-        mergeDivs = TriState(tidyOptGetCurrPick(tidyDoc, TidyMergeDivs))
-        gdoc = YesNo(tidyOptGetBool(tidyDoc, TidyGDocClean))
-        word2000 = YesNo(tidyOptGetBool(tidyDoc, TidyWord2000))
-        repeatedAttributes = RepeatedAttributeModes(tidyOptGetCurrPick(tidyDoc, TidyDuplicateAttrs))
-        quoteAmpersand = YesNo(tidyOptGetBool(tidyDoc, TidyQuoteAmpersand))
-        fixBadComments = YesNo(tidyOptGetBool(tidyDoc, TidyFixComments))
-        strictTagsAttributes = YesNo(tidyOptGetBool(tidyDoc, TidyStrictTagsAttr))
-        fixUri = YesNo(tidyOptGetBool(tidyDoc, TidyFixUri))
-        assumeXmlProcins = YesNo(tidyOptGetBool(tidyDoc, TidyXmlPIs))
-        hideComments = YesNo(tidyOptGetBool(tidyDoc, TidyHideComments))
+    }
+    
+    var dropProprietaryAttributes: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyDropPropAttrs))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "drop-proprietary-attributes", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var uppercaseTags: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyUpperCaseTags))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "uppercase-tags", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var quoteMarks: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyQuoteMarks))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "quote-marks", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var cssPrefix: String? {
+        
+        get {
+            
+            return String(tidyOptGetValue(tidyDoc, TidyCSSPrefix))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "css-prefix", "\(newValue ?? "")")
+            
+        }
+        
+    }
+    
+    var userDoctype: String? {
+        
+        get {
+            
+            return String(tidyOptGetValue(tidyDoc, TidyDoctype))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "doctype", "\(newValue ?? "")")
+            
+        }
+        
+    }
+    
+    var outputHtml: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyHtmlOut))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "output-html", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var joinStyles: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyJoinStyles))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "join-styles", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var decorateInferredUl: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyDecorateInferredUL))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "decorate-inferred-ul", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var newPreTags: String? {
+        
+        get {
+            
+            return String(tidyOptGetValue(tidyDoc, TidyPreTags))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "new-pre-tags", "\(newValue ?? "")")
+            
+        }
+        
+    }
+    
+    var altText: String? {
+        
+        get {
+            
+            return String(tidyOptGetValue(tidyDoc, TidyAltText))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "alt-text", "\(newValue ?? "")")
+            
+        }
+        
+    }
+    
+    var lowerLiterals: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyLowerLiterals))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "lower-literals", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var coerceEndtags: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyCoerceEndTags))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "coerce-endtags", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var newInlineTags: String? {
+        
+        get {
+            
+            return String(tidyOptGetValue(tidyDoc, TidyInlineTags))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "new-inline-tags", "\(newValue ?? "")")
+            
+        }
+        
+    }
+    
+    var literalAttributes: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyLiteralAttribs))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "literal-attributes", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var anchorAsName: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyAnchorAsName))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "anchor-as-name", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var addXmlSpace: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyXmlSpace))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "add-xml-space", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var inputXml: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyXmlTags))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "input-xml", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var skipNested: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidySkipNested))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "skip-nested", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var dropEmptyParas: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyDropEmptyParas))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "drop-empty-paras", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var replaceColor: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyReplaceColor))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "replace-color", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var mergeEmphasis: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyMergeEmphasis))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "merge-emphasis", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var addXmlDecl: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyXmlDecl))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "add-xml-decl", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var bare: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyMakeBare))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "bare", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var hideEndtags: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyHideEndTags))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "hide-endtags", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var outputXhtml: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyXhtmlOut))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "output-xhtml", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var uppercaseAttributes: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyUpperCaseAttrs))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "uppercase-attributes", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var newEmptyTags: String? {
+        
+        get {
+            
+            return String(tidyOptGetValue(tidyDoc, TidyEmptyTags))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "new-empty-tags", "\(newValue ?? "")")
+            
+        }
+        
+    }
+    
+    var preserveEntities: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyPreserveEntities))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "preserve-entities", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var numericEntities: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyNumEntities))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "numeric-entities", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var dropFontTags: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyDropFontTags))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "drop-font-tags", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var quoteNbsp: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyQuoteNbsp))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "quote-nbsp", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var dropEmptyElements: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyDropEmptyElems))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "drop-empty-elements", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var logicalEmphasis: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyLogicalEmphasis))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "logical-emphasis", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var omitOptionalTags: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyOmitOptionalTags))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "omit-optional-tags", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var encloseBlockText: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyEncloseBlockText))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "enclose-block-text", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var escapeCdata: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyEscapeCdata))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "escape-cdata", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var showBodyOnly: TriState {
+        
+        get {
+            
+            return TriState(tidyOptGetCurrPick(tidyDoc, TidyBodyOnly))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "show-body-only", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var mergeDivs: TriState {
+        
+        get {
+            
+            return TriState(tidyOptGetCurrPick(tidyDoc, TidyMergeDivs))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "merge-divs", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var gdoc: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyGDocClean))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "gdoc", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var word2000: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyWord2000))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "word-2000", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var repeatedAttributes: RepeatedAttributeModes {
+        
+        get {
+            
+            return RepeatedAttributeModes(tidyOptGetCurrPick(tidyDoc, TidyDuplicateAttrs))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "repeated-attributes", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var quoteAmpersand: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyQuoteAmpersand))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "quote-ampersand", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var fixBadComments: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyFixComments))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "fix-bad-comments", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var strictTagsAttributes: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyStrictTagsAttr))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "strict-tags-attributes", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var newBlocklevelTags: String? {
+        
+        get {
+            
+            return String(tidyOptGetValue(tidyDoc, TidyBlockTags))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "new-blocklevel-tags", "\(newValue ?? "")")
+            
+        }
+        
+    }
+    
+    var fixUri: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyFixUri))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "fix-uri", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var assumeXmlProcins: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyXmlPIs))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "assume-xml-procins", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var hideComments: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyHideComments))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "hide-comments", "\(newValue)")
+            
+        }
         
     }
     
@@ -386,53 +1331,297 @@ struct MarkupOptions: TidyOptions {
 //======================
 struct PrettyPrintOptions: TidyOptions {
     
-    var indentSpaces: Int
-    var escapeScripts: YesNo
-    var indentWithTabs: YesNo
-    var tabSize: Int
-    var wrap: Int
-    var indent: TriState
-    var verticalSpace: TriState
-    var wrapSections: YesNo
-    var markup: YesNo
-    var sortAttributes: AttributeSortStrategy
-    var wrapAttributes: YesNo
-    var indentAttributes: YesNo
+    var tidyDoc: TidyDoc
+    
+    var indentSpaces: Int {
+        
+        get {
+            
+            return Int(tidyOptGetInt(tidyDoc, TidyIndentSpaces))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "indent-spaces", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var escapeScripts: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyEscapeScripts))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "escape-scripts", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var indentWithTabs: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyPPrintTabs))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "indent-with-tabs", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var tabSize: Int {
+        
+        get {
+            
+            return Int(tidyOptGetInt(tidyDoc, TidyTabSize))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "tab-size", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var wrap: Int {
+        
+        get {
+            
+            return Int(tidyOptGetInt(tidyDoc, TidyWrapLen))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "wrap", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var indent: TriState {
+        
+        get {
+            
+            return TriState(tidyOptGetCurrPick(tidyDoc, TidyIndentContent))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "indent", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var verticalSpace: TriState {
+        
+        get {
+            
+            return TriState(tidyOptGetCurrPick(tidyDoc, TidyVertSpace))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "vertical-space", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var wrapSections: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyWrapSection))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "wrap-sections", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var markup: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyShowMarkup))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "markup", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var sortAttributes: AttributeSortStrategy {
+        
+        get {
+            
+            return AttributeSortStrategy(tidyOptGetCurrPick(tidyDoc, TidySortAttributes))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "sort-attributes", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var wrapAttributes: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyWrapAttVals))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "wrap-attributes", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var indentAttributes: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyIndentAttributes))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "indent-attributes", "\(newValue)")
+            
+        }
+        
+    }
+    
     
     #if SUPPORT_ASIAN_ENCODINGS
-    var punctuationWrap: YesNo
+    var punctuationWrap: YesNo {
+    
+    get {
+    
+    return YesNo(tidyOptGetBool(tidyDoc, TidyPunctWrap))
+    
+    }
+    
+    set {
+    
+    tidyOptParseValue(tidyDoc, "punctuation-wrap", "\(newValue)")
+    
+    }
+    
+    }
     #endif
     
-    var wrapJste: YesNo
-    var breakBeforeBr: YesNo
-    var wrapPhp: YesNo
-    var wrapScriptLiterals: YesNo
-    var wrapAsp: YesNo
     
-    init(tidyDoc: TidyDoc) {
+    var wrapJste: YesNo {
         
-        indentSpaces = Int(tidyOptGetInt(tidyDoc, TidyIndentSpaces))
-        escapeScripts = YesNo(tidyOptGetBool(tidyDoc, TidyEscapeScripts))
-        indentWithTabs = YesNo(tidyOptGetBool(tidyDoc, TidyPPrintTabs))
-        tabSize = Int(tidyOptGetInt(tidyDoc, TidyTabSize))
-        wrap = Int(tidyOptGetInt(tidyDoc, TidyWrapLen))
-        indent = TriState(tidyOptGetCurrPick(tidyDoc, TidyIndentContent))
-        verticalSpace = TriState(tidyOptGetCurrPick(tidyDoc, TidyVertSpace))
-        wrapSections = YesNo(tidyOptGetBool(tidyDoc, TidyWrapSection))
-        markup = YesNo(tidyOptGetBool(tidyDoc, TidyShowMarkup))
-        sortAttributes = AttributeSortStrategy(tidyOptGetCurrPick(tidyDoc, TidySortAttributes))
-        wrapAttributes = YesNo(tidyOptGetBool(tidyDoc, TidyWrapAttVals))
-        indentAttributes = YesNo(tidyOptGetBool(tidyDoc, TidyIndentAttributes))
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyWrapJste))
+            
+        }
         
-        #if SUPPORT_ASIAN_ENCODINGS
-            punctuationWrap = YesNo(tidyOptGetBool(tidyDoc, TidyPunctWrap))
-        #endif
+        set {
+            
+            tidyOptParseValue(tidyDoc, "wrap-jste", "\(newValue)")
+            
+        }
         
-        wrapJste = YesNo(tidyOptGetBool(tidyDoc, TidyWrapJste))
-        breakBeforeBr = YesNo(tidyOptGetBool(tidyDoc, TidyBreakBeforeBR))
-        wrapPhp = YesNo(tidyOptGetBool(tidyDoc, TidyWrapPhp))
-        wrapScriptLiterals = YesNo(tidyOptGetBool(tidyDoc, TidyWrapScriptlets))
-        wrapAsp = YesNo(tidyOptGetBool(tidyDoc, TidyWrapAsp))
+    }
+    
+    var breakBeforeBr: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyBreakBeforeBR))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "break-before-br", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var wrapPhp: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyWrapPhp))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "wrap-php", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var wrapScriptLiterals: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyWrapScriptlets))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "wrap-script-literals", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var wrapAsp: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyWrapAsp))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "wrap-asp", "\(newValue)")
+            
+        }
         
     }
     
@@ -443,17 +1632,69 @@ struct PrettyPrintOptions: TidyOptions {
 //======================
 struct DiagnosticsOptions: TidyOptions {
     
-    var showInfo: YesNo
-    var showWarnings: YesNo
-    var showErrors: Int
-    var accessibilityCheck: AccessibilityCheckLevel
+    var tidyDoc: TidyDoc
     
-    init(tidyDoc: TidyDoc) {
+    var showInfo: YesNo {
         
-        showInfo = YesNo(tidyOptGetBool(tidyDoc, TidyShowInfo))
-        showWarnings = YesNo(tidyOptGetBool(tidyDoc, TidyShowWarnings))
-        showErrors = Int(tidyOptGetInt(tidyDoc, TidyShowErrors))
-        accessibilityCheck = AccessibilityCheckLevel(tidyOptGetInt(tidyDoc, TidyAccessibilityCheckLevel))
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyShowInfo))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "show-info", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var showWarnings: YesNo {
+        
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyShowWarnings))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "show-warnings", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var showErrors: Int {
+        
+        get {
+            
+            return Int(tidyOptGetInt(tidyDoc, TidyShowErrors))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "show-errors", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var accessibilityCheck: AccessibilityCheckLevel {
+        
+        get {
+            
+            return AccessibilityCheckLevel(tidyOptGetInt(tidyDoc, TidyAccessibilityCheckLevel))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "accessibility-check", "\(newValue)")
+            
+        }
         
     }
     
@@ -464,34 +1705,125 @@ struct DiagnosticsOptions: TidyOptions {
 //======================
 struct CharacterEncodingOptions: TidyOptions {
     
-    var charEncoding: CharacterEncoding
+    var tidyDoc: TidyDoc
+    
+    var charEncoding: CharacterEncoding {
+        
+        get {
+            
+            return CharacterEncoding(tidyOptGetEncName(tidyDoc, TidyCharEncoding))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "char-encoding", "\(newValue)")
+            
+        }
+        
+    }
+    
     
     #if SUPPORT_ASIAN_ENCODINGS
-    var language: String?
+    var language: String? {
+    
+    get {
+    
+    return String(tidyOptGetValue(tidyDoc, TidyLanguage))
+    
+    }
+    
+    set {
+    
+    tidyOptParseValue(tidyDoc, "language", "\(newValue ?? "")")
+    
+    }
+    
+    }
     #endif
     
-    var outputEncoding: CharacterEncoding
+    
+    var outputEncoding: CharacterEncoding {
+        
+        get {
+            
+            return CharacterEncoding(tidyOptGetEncName(tidyDoc, TidyOutCharEncoding))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "output-encoding", "\(newValue)")
+            
+        }
+        
+    }
+    
     
     #if SUPPORT_UTF16_ENCODINGS
-    var outputBom: TriState
+    var outputBom: TriState {
+    
+    get {
+    
+    return TriState(tidyOptGetCurrPick(tidyDoc, TidyOutputBOM))
+    
+    }
+    
+    set {
+    
+    tidyOptParseValue(tidyDoc, "output-bom", "\(newValue)")
+    
+    }
+    
+    }
     #endif
     
-    var asciiChars: YesNo
-    var newline: NewlineType
-    var inputEncoding: CharacterEncoding
     
-    init(tidyDoc: TidyDoc) {
+    var asciiChars: YesNo {
         
-        charEncoding = CharacterEncoding(tidyOptGetEncName(tidyDoc, TidyCharEncoding))
-        outputEncoding = CharacterEncoding(tidyOptGetEncName(tidyDoc, TidyOutCharEncoding))
+        get {
+            
+            return YesNo(tidyOptGetBool(tidyDoc, TidyAsciiChars))
+            
+        }
         
-        #if SUPPORT_UTF16_ENCODINGS
-            outputBom = TriState(tidyOptGetCurrPick(tidyDoc, TidyOutputBOM))
-        #endif
+        set {
+            
+            tidyOptParseValue(tidyDoc, "ascii-chars", "\(newValue)")
+            
+        }
         
-        asciiChars = YesNo(tidyOptGetBool(tidyDoc, TidyAsciiChars))
-        newline = NewlineType(tidyOptGetCurrPick(tidyDoc, TidyNewline))
-        inputEncoding = CharacterEncoding(tidyOptGetEncName(tidyDoc, TidyInCharEncoding))
+    }
+    
+    var newline: NewlineType {
+        
+        get {
+            
+            return NewlineType(tidyOptGetCurrPick(tidyDoc, TidyNewline))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "newline", "\(newValue)")
+            
+        }
+        
+    }
+    
+    var inputEncoding: CharacterEncoding {
+        
+        get {
+            
+            return CharacterEncoding(tidyOptGetEncName(tidyDoc, TidyInCharEncoding))
+            
+        }
+        
+        set {
+            
+            tidyOptParseValue(tidyDoc, "input-encoding", "\(newValue)")
+            
+        }
         
     }
     
