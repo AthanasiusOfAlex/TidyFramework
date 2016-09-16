@@ -11,17 +11,17 @@ import Foundation
 import Tidy
 import TidyBufferIO
 
-public class TidyDocument {
+open class TidyDocument {
     
     var tidyDoc = tidyCreate()
     
-    public var miscellaneousOptions: MiscellaneousOptions
-    public var markupOptions: MarkupOptions
-    public var prettyPrintOptions: PrettyPrintOptions
-    public var diagnosticsOptions: DiagnosticsOptions
-    public var characterEncodingOptions: CharacterEncodingOptions
+    open var miscellaneousOptions: MiscellaneousOptions
+    open var markupOptions: MarkupOptions
+    open var prettyPrintOptions: PrettyPrintOptions
+    open var diagnosticsOptions: DiagnosticsOptions
+    open var characterEncodingOptions: CharacterEncodingOptions
     
-    public var tidiedText: String? {
+    open var tidiedText: String? {
         
         guard let originalText = originalText else { return nil }
 
@@ -42,7 +42,7 @@ public class TidyDocument {
         
     }
 
-    public var originalText: String?
+    open var originalText: String?
     
     var mainBuffer = TidyBuffer()
     var errorBuffer = TidyBuffer()
@@ -57,11 +57,11 @@ public class TidyDocument {
     
     public init() {
         
-        miscellaneousOptions = MiscellaneousOptions(tidyDoc: tidyDoc)
-        markupOptions = MarkupOptions(tidyDoc: tidyDoc)
-        prettyPrintOptions = PrettyPrintOptions(tidyDoc: tidyDoc)
-        diagnosticsOptions = DiagnosticsOptions(tidyDoc: tidyDoc)
-        characterEncodingOptions = CharacterEncodingOptions(tidyDoc: tidyDoc)
+        miscellaneousOptions = MiscellaneousOptions(tidyDoc: tidyDoc!)
+        markupOptions = MarkupOptions(tidyDoc: tidyDoc!)
+        prettyPrintOptions = PrettyPrintOptions(tidyDoc: tidyDoc!)
+        diagnosticsOptions = DiagnosticsOptions(tidyDoc: tidyDoc!)
+        characterEncodingOptions = CharacterEncodingOptions(tidyDoc: tidyDoc!)
         
         tidyBufInit(&mainBuffer)
         tidyBufInit(&errorBuffer)

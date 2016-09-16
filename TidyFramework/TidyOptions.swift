@@ -45,7 +45,7 @@ extension String {
 
     init?(_ tidyConstantString: ctmbstr) {
         
-        if let swiftString = String.fromCString(tidyConstantString) {
+        if let swiftString = String(validatingUTF8: tidyConstantString) {
             
             self = swiftString
             

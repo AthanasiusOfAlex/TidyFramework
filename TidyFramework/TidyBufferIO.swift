@@ -17,7 +17,7 @@ extension String {
         
         let cString = UnsafeMutablePointer<Int8>(buffer.bp)
         
-        if let newValue = String.fromCString(cString) {
+        if let newValue = String(validatingUTF8: cString!) {
             
             self = newValue
             
