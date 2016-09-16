@@ -196,6 +196,21 @@ class TidyFrameworkTests: XCTestCase {
         
     }
     
+    func testDocuments() {
+        
+        let tidyDocument = TidyDocument()
+        
+        tidyDocument.characterEncodingOptions.inputEncoding = .utf8
+        tidyDocument.characterEncodingOptions.outputEncoding = .ascii
+
+        tidyDocument.originalText = "Nous tenons ces vérités comme allant de soi.☺️"
+        
+        let tidiedText = tidyDocument.tidiedText ?? ""
+        
+        print(tidiedText)
+        
+    }
+    
     func testPerformanceExample() {
         
         // This is an example of a performance test case.

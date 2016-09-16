@@ -10,7 +10,8 @@
 		520933761D7720B400056BA0 /* Tidy in Resources */ = {isa = PBXBuildFile; fileRef = 520933751D7720B400056BA0 /* Tidy */; };
 		520933781D77214700056BA0 /* TidyTestSuite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520933771D77214700056BA0 /* TidyTestSuite.swift */; };
 		5209337D1D773C9F00056BA0 /* TidyDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5209337C1D773C9F00056BA0 /* TidyDocument.swift */; };
-		52876ED01D7718C300DE890B /* TidyLibraryBridge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52876ECF1D7718C300DE890B /* TidyLibraryBridge.swift */; };
+		520AEE011D7DDCCC006A8D3D /* TidyBufferIO.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520AEE001D7DDCCC006A8D3D /* TidyBufferIO.swift */; };
+		52876ED01D7718C300DE890B /* TidyOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52876ECF1D7718C300DE890B /* TidyOptions.swift */; };
 		52BD26C31D76F5E500E5CF6A /* TidyFramework.h in Headers */ = {isa = PBXBuildFile; fileRef = 52BD26C21D76F5E500E5CF6A /* TidyFramework.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		52BD26CA1D76F5E500E5CF6A /* TidyFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52BD26BF1D76F5E500E5CF6A /* TidyFramework.framework */; };
 		52BD26CF1D76F5E500E5CF6A /* TidyFrameworkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52BD26CE1D76F5E500E5CF6A /* TidyFrameworkTests.swift */; };
@@ -30,7 +31,8 @@
 		520933751D7720B400056BA0 /* Tidy */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Tidy; sourceTree = "<group>"; };
 		520933771D77214700056BA0 /* TidyTestSuite.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TidyTestSuite.swift; path = ../TidyFramework/TidyTestSuite.swift; sourceTree = "<group>"; };
 		5209337C1D773C9F00056BA0 /* TidyDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TidyDocument.swift; sourceTree = "<group>"; };
-		52876ECF1D7718C300DE890B /* TidyLibraryBridge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TidyLibraryBridge.swift; sourceTree = "<group>"; };
+		520AEE001D7DDCCC006A8D3D /* TidyBufferIO.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TidyBufferIO.swift; sourceTree = "<group>"; };
+		52876ECF1D7718C300DE890B /* TidyOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TidyOptions.swift; sourceTree = "<group>"; };
 		52BD26BF1D76F5E500E5CF6A /* TidyFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TidyFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		52BD26C21D76F5E500E5CF6A /* TidyFramework.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TidyFramework.h; sourceTree = "<group>"; };
 		52BD26C41D76F5E500E5CF6A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -109,7 +111,8 @@
 		52BD26D91D76F76600E5CF6A /* TidyLibraryBridge */ = {
 			isa = PBXGroup;
 			children = (
-				52876ECF1D7718C300DE890B /* TidyLibraryBridge.swift */,
+				52876ECF1D7718C300DE890B /* TidyOptions.swift */,
+				520AEE001D7DDCCC006A8D3D /* TidyBufferIO.swift */,
 			);
 			name = TidyLibraryBridge;
 			sourceTree = "<group>";
@@ -176,9 +179,11 @@
 				TargetAttributes = {
 					52BD26BE1D76F5E500E5CF6A = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0800;
 					};
 					52BD26C81D76F5E500E5CF6A = {
 						CreatedOnToolsVersion = 7.3.1;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -224,8 +229,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				5209337D1D773C9F00056BA0 /* TidyDocument.swift in Sources */,
+				520AEE011D7DDCCC006A8D3D /* TidyBufferIO.swift in Sources */,
 				520933781D77214700056BA0 /* TidyTestSuite.swift in Sources */,
-				52876ED01D7718C300DE890B /* TidyLibraryBridge.swift in Sources */,
+				52876ED01D7718C300DE890B /* TidyOptions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,6 +368,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = "\"$(SRCROOT)/Tidy\"";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -390,6 +397,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_INCLUDE_PATHS = "\"$(SRCROOT)/Tidy\"";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};
@@ -401,6 +409,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LCPlusPlus.TidyFrameworkTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -412,6 +421,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LCPlusPlus.TidyFrameworkTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};

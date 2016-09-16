@@ -66,39 +66,3 @@ func testTidy() -> Int {
     
     return Int(rc);
 }
-
-// MARK - make it possible to convert a TidyBuffer to a string.
-extension String {
-    
-    init(_ buffer: TidyBuffer) {
-        
-        var result = ""
-        var bufferPointer = buffer.bp
-        
-        for _ in 0..<buffer.size-1 {
-            
-            let byte = Int(bufferPointer.memory)
-            bufferPointer = bufferPointer.successor()
-            
-            let unicodeScalar = UnicodeScalar(byte)
-            
-            result.append(unicodeScalar)
-            
-        }
-        
-        self = result
-        
-    }
-    
-}
-
-// MARK - make it possible to use a TidyBuffer as a variable by the print function
-extension TidyBuffer: CustomStringConvertible {
-    
-    public var description: String {
-        
-        return String(self)
-        
-    }
-    
-}

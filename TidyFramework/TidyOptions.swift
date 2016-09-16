@@ -1,5 +1,5 @@
 //
-//  TidyBridge.swift
+//  TidyOptions.swift
 //  TidyFramework
 //
 //  Created by Louis Melahn on 8/31/16.
@@ -10,6 +10,9 @@ import Foundation
 import Tidy
 import TidyBufferIO
 
+// TODO -
+//
+// 1. Some way of detecting errors when setting options.
 
 // MARK - make it possible to convert a ctmbstr to a string.
 extension String {
@@ -57,7 +60,7 @@ extension String {
     
 }
 
-enum YesNo {
+public enum YesNo {
     
     case yes
     case no
@@ -82,7 +85,7 @@ enum YesNo {
     
 }
 
-enum DocType: String {
+public enum DocType: String {
     
     case omit
     case html5
@@ -105,7 +108,7 @@ enum DocType: String {
     
 }
 
-enum TriState: String {
+public enum TriState: String {
     
     case yes
     case no
@@ -125,7 +128,7 @@ enum TriState: String {
     
 }
 
-enum NewlineType: String {
+public enum NewlineType: String {
     
     case LF
     case CRLF
@@ -145,7 +148,7 @@ enum NewlineType: String {
     
 }
 
-enum RepeatedAttributeModes: String {
+public enum RepeatedAttributeModes: String {
     
     case keepFirst
     case keepLast
@@ -176,7 +179,7 @@ enum RepeatedAttributeModes: String {
     
 }
 
-enum AccessibilityCheckLevel: Int {
+public enum AccessibilityCheckLevel: Int {
     
     case classic
     case priorityOneChecks
@@ -197,7 +200,7 @@ enum AccessibilityCheckLevel: Int {
     
 }
 
-enum AttributeSortStrategy: String {
+public enum AttributeSortStrategy: String {
     case none
     case alphabetical
     
@@ -215,7 +218,7 @@ enum AttributeSortStrategy: String {
     
 }
 
-enum CharacterEncoding: String {
+public enum CharacterEncoding: String {
     
     case raw
     case ascii
@@ -251,11 +254,11 @@ protocol TidyOptions { }
 //======================
 // Group: MiscellaneousOptions
 //======================
-struct MiscellaneousOptions: TidyOptions {
+public struct MiscellaneousOptions: TidyOptions {
     
     var tidyDoc: TidyDoc
     
-    var writeBack: YesNo {
+    public var writeBack: YesNo {
         
         get {
             
@@ -271,7 +274,7 @@ struct MiscellaneousOptions: TidyOptions {
         
     }
     
-    var errorFile: String? {
+    public var errorFile: String? {
         
         get {
             
@@ -287,7 +290,7 @@ struct MiscellaneousOptions: TidyOptions {
         
     }
     
-    var gnuEmacsFile: String? {
+    public var gnuEmacsFile: String? {
         
         get {
             
@@ -303,7 +306,7 @@ struct MiscellaneousOptions: TidyOptions {
         
     }
     
-    var keepTime: YesNo {
+    public var keepTime: YesNo {
         
         get {
             
@@ -319,7 +322,7 @@ struct MiscellaneousOptions: TidyOptions {
         
     }
     
-    var quiet: YesNo {
+    public var quiet: YesNo {
         
         get {
             
@@ -335,7 +338,7 @@ struct MiscellaneousOptions: TidyOptions {
         
     }
     
-    var gnuEmacs: YesNo {
+    public var gnuEmacs: YesNo {
         
         get {
             
@@ -351,7 +354,7 @@ struct MiscellaneousOptions: TidyOptions {
         
     }
     
-    var tidyMark: YesNo {
+    public var tidyMark: YesNo {
         
         get {
             
@@ -367,7 +370,7 @@ struct MiscellaneousOptions: TidyOptions {
         
     }
     
-    var outputFile: String? {
+    public var outputFile: String? {
         
         get {
             
@@ -383,7 +386,7 @@ struct MiscellaneousOptions: TidyOptions {
         
     }
     
-    var forceOutput: YesNo {
+    public var forceOutput: YesNo {
         
         get {
             
@@ -404,11 +407,11 @@ struct MiscellaneousOptions: TidyOptions {
 //======================
 // Group: MarkupOptions
 //======================
-struct MarkupOptions: TidyOptions {
+public struct MarkupOptions: TidyOptions {
     
     var tidyDoc: TidyDoc
     
-    var outputXml: YesNo {
+    public var outputXml: YesNo {
         
         get {
             
@@ -424,7 +427,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var joinClasses: YesNo {
+    public var joinClasses: YesNo {
         
         get {
             
@@ -440,7 +443,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var encloseText: YesNo {
+    public var encloseText: YesNo {
         
         get {
             
@@ -456,7 +459,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var indentCdata: YesNo {
+    public var indentCdata: YesNo {
         
         get {
             
@@ -472,7 +475,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var mergeSpans: TriState {
+    public var mergeSpans: TriState {
         
         get {
             
@@ -488,7 +491,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var fixBackslash: YesNo {
+    public var fixBackslash: YesNo {
         
         get {
             
@@ -504,7 +507,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var clean: YesNo {
+    public var clean: YesNo {
         
         get {
             
@@ -520,7 +523,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    
+    public
     #if SUPPORT_ASIAN_ENCODINGS
     var ncr: YesNo {
     
@@ -540,7 +543,7 @@ struct MarkupOptions: TidyOptions {
     #endif
     
     
-    var doctype: DocType {
+    public var doctype: DocType {
         
         get {
             
@@ -556,7 +559,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var dropProprietaryAttributes: YesNo {
+    public var dropProprietaryAttributes: YesNo {
         
         get {
             
@@ -572,7 +575,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var uppercaseTags: YesNo {
+    public var uppercaseTags: YesNo {
         
         get {
             
@@ -588,7 +591,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var quoteMarks: YesNo {
+    public var quoteMarks: YesNo {
         
         get {
             
@@ -604,7 +607,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var cssPrefix: String? {
+    public var cssPrefix: String? {
         
         get {
             
@@ -620,7 +623,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var userDoctype: String? {
+    public var userDoctype: String? {
         
         get {
             
@@ -636,7 +639,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var outputHtml: YesNo {
+    public var outputHtml: YesNo {
         
         get {
             
@@ -652,7 +655,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var joinStyles: YesNo {
+    public var joinStyles: YesNo {
         
         get {
             
@@ -668,7 +671,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var decorateInferredUl: YesNo {
+    public var decorateInferredUl: YesNo {
         
         get {
             
@@ -684,7 +687,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var newPreTags: String? {
+    public var newPreTags: String? {
         
         get {
             
@@ -700,7 +703,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var altText: String? {
+    public var altText: String? {
         
         get {
             
@@ -716,7 +719,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var lowerLiterals: YesNo {
+    public var lowerLiterals: YesNo {
         
         get {
             
@@ -732,7 +735,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var coerceEndtags: YesNo {
+    public var coerceEndtags: YesNo {
         
         get {
             
@@ -748,7 +751,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var newInlineTags: String? {
+    public var newInlineTags: String? {
         
         get {
             
@@ -764,7 +767,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var literalAttributes: YesNo {
+    public var literalAttributes: YesNo {
         
         get {
             
@@ -780,7 +783,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var anchorAsName: YesNo {
+    public var anchorAsName: YesNo {
         
         get {
             
@@ -796,7 +799,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var addXmlSpace: YesNo {
+    public var addXmlSpace: YesNo {
         
         get {
             
@@ -812,7 +815,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var inputXml: YesNo {
+    public var inputXml: YesNo {
         
         get {
             
@@ -828,7 +831,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var skipNested: YesNo {
+    public var skipNested: YesNo {
         
         get {
             
@@ -844,7 +847,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var dropEmptyParas: YesNo {
+    public var dropEmptyParas: YesNo {
         
         get {
             
@@ -860,7 +863,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var replaceColor: YesNo {
+    public var replaceColor: YesNo {
         
         get {
             
@@ -876,7 +879,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var mergeEmphasis: YesNo {
+    public var mergeEmphasis: YesNo {
         
         get {
             
@@ -892,7 +895,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var addXmlDecl: YesNo {
+    public var addXmlDecl: YesNo {
         
         get {
             
@@ -908,7 +911,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var bare: YesNo {
+    public var bare: YesNo {
         
         get {
             
@@ -924,7 +927,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var hideEndtags: YesNo {
+    public var hideEndtags: YesNo {
         
         get {
             
@@ -940,7 +943,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var outputXhtml: YesNo {
+    public var outputXhtml: YesNo {
         
         get {
             
@@ -956,7 +959,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var uppercaseAttributes: YesNo {
+    public var uppercaseAttributes: YesNo {
         
         get {
             
@@ -972,7 +975,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var newEmptyTags: String? {
+    public var newEmptyTags: String? {
         
         get {
             
@@ -988,7 +991,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var preserveEntities: YesNo {
+    public var preserveEntities: YesNo {
         
         get {
             
@@ -1004,7 +1007,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var numericEntities: YesNo {
+    public var numericEntities: YesNo {
         
         get {
             
@@ -1020,7 +1023,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var dropFontTags: YesNo {
+    public var dropFontTags: YesNo {
         
         get {
             
@@ -1036,7 +1039,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var quoteNbsp: YesNo {
+    public var quoteNbsp: YesNo {
         
         get {
             
@@ -1052,7 +1055,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var dropEmptyElements: YesNo {
+    public var dropEmptyElements: YesNo {
         
         get {
             
@@ -1068,7 +1071,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var logicalEmphasis: YesNo {
+    public var logicalEmphasis: YesNo {
         
         get {
             
@@ -1084,7 +1087,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var omitOptionalTags: YesNo {
+    public var omitOptionalTags: YesNo {
         
         get {
             
@@ -1100,7 +1103,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var encloseBlockText: YesNo {
+    public var encloseBlockText: YesNo {
         
         get {
             
@@ -1116,7 +1119,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var escapeCdata: YesNo {
+    public var escapeCdata: YesNo {
         
         get {
             
@@ -1132,7 +1135,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var showBodyOnly: TriState {
+    public var showBodyOnly: TriState {
         
         get {
             
@@ -1148,7 +1151,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var mergeDivs: TriState {
+    public var mergeDivs: TriState {
         
         get {
             
@@ -1164,7 +1167,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var gdoc: YesNo {
+    public var gdoc: YesNo {
         
         get {
             
@@ -1180,7 +1183,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var word2000: YesNo {
+    public var word2000: YesNo {
         
         get {
             
@@ -1196,7 +1199,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var repeatedAttributes: RepeatedAttributeModes {
+    public var repeatedAttributes: RepeatedAttributeModes {
         
         get {
             
@@ -1212,7 +1215,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var quoteAmpersand: YesNo {
+    public var quoteAmpersand: YesNo {
         
         get {
             
@@ -1228,7 +1231,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var fixBadComments: YesNo {
+    public var fixBadComments: YesNo {
         
         get {
             
@@ -1244,7 +1247,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var strictTagsAttributes: YesNo {
+    public var strictTagsAttributes: YesNo {
         
         get {
             
@@ -1260,7 +1263,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var newBlocklevelTags: String? {
+    public var newBlocklevelTags: String? {
         
         get {
             
@@ -1276,7 +1279,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var fixUri: YesNo {
+    public var fixUri: YesNo {
         
         get {
             
@@ -1292,7 +1295,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var assumeXmlProcins: YesNo {
+    public var assumeXmlProcins: YesNo {
         
         get {
             
@@ -1308,7 +1311,7 @@ struct MarkupOptions: TidyOptions {
         
     }
     
-    var hideComments: YesNo {
+    public var hideComments: YesNo {
         
         get {
             
@@ -1329,11 +1332,11 @@ struct MarkupOptions: TidyOptions {
 //======================
 // Group: PrettyPrintOptions
 //======================
-struct PrettyPrintOptions: TidyOptions {
+public struct PrettyPrintOptions: TidyOptions {
     
     var tidyDoc: TidyDoc
     
-    var indentSpaces: Int {
+    public var indentSpaces: Int {
         
         get {
             
@@ -1349,7 +1352,7 @@ struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    var escapeScripts: YesNo {
+    public var escapeScripts: YesNo {
         
         get {
             
@@ -1365,7 +1368,7 @@ struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    var indentWithTabs: YesNo {
+    public var indentWithTabs: YesNo {
         
         get {
             
@@ -1381,7 +1384,7 @@ struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    var tabSize: Int {
+    public var tabSize: Int {
         
         get {
             
@@ -1397,7 +1400,7 @@ struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    var wrap: Int {
+    public var wrap: Int {
         
         get {
             
@@ -1413,7 +1416,7 @@ struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    var indent: TriState {
+    public var indent: TriState {
         
         get {
             
@@ -1429,7 +1432,7 @@ struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    var verticalSpace: TriState {
+    public var verticalSpace: TriState {
         
         get {
             
@@ -1445,7 +1448,7 @@ struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    var wrapSections: YesNo {
+    public var wrapSections: YesNo {
         
         get {
             
@@ -1461,7 +1464,7 @@ struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    var markup: YesNo {
+    public var markup: YesNo {
         
         get {
             
@@ -1477,7 +1480,7 @@ struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    var sortAttributes: AttributeSortStrategy {
+    public var sortAttributes: AttributeSortStrategy {
         
         get {
             
@@ -1493,7 +1496,7 @@ struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    var wrapAttributes: YesNo {
+    public var wrapAttributes: YesNo {
         
         get {
             
@@ -1509,7 +1512,7 @@ struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    var indentAttributes: YesNo {
+    public var indentAttributes: YesNo {
         
         get {
             
@@ -1525,7 +1528,7 @@ struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    
+    public 
     #if SUPPORT_ASIAN_ENCODINGS
     var punctuationWrap: YesNo {
     
@@ -1545,7 +1548,7 @@ struct PrettyPrintOptions: TidyOptions {
     #endif
     
     
-    var wrapJste: YesNo {
+    public var wrapJste: YesNo {
         
         get {
             
@@ -1561,7 +1564,7 @@ struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    var breakBeforeBr: YesNo {
+    public var breakBeforeBr: YesNo {
         
         get {
             
@@ -1577,7 +1580,7 @@ struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    var wrapPhp: YesNo {
+    public var wrapPhp: YesNo {
         
         get {
             
@@ -1593,7 +1596,7 @@ struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    var wrapScriptLiterals: YesNo {
+    public var wrapScriptLiterals: YesNo {
         
         get {
             
@@ -1609,7 +1612,7 @@ struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    var wrapAsp: YesNo {
+    public var wrapAsp: YesNo {
         
         get {
             
@@ -1630,11 +1633,11 @@ struct PrettyPrintOptions: TidyOptions {
 //======================
 // Group: DiagnosticsOptions
 //======================
-struct DiagnosticsOptions: TidyOptions {
+public struct DiagnosticsOptions: TidyOptions {
     
     var tidyDoc: TidyDoc
     
-    var showInfo: YesNo {
+    public var showInfo: YesNo {
         
         get {
             
@@ -1650,7 +1653,7 @@ struct DiagnosticsOptions: TidyOptions {
         
     }
     
-    var showWarnings: YesNo {
+    public var showWarnings: YesNo {
         
         get {
             
@@ -1666,7 +1669,7 @@ struct DiagnosticsOptions: TidyOptions {
         
     }
     
-    var showErrors: Int {
+    public var showErrors: Int {
         
         get {
             
@@ -1682,7 +1685,7 @@ struct DiagnosticsOptions: TidyOptions {
         
     }
     
-    var accessibilityCheck: AccessibilityCheckLevel {
+    public var accessibilityCheck: AccessibilityCheckLevel {
         
         get {
             
@@ -1703,11 +1706,11 @@ struct DiagnosticsOptions: TidyOptions {
 //======================
 // Group: CharacterEncodingOptions
 //======================
-struct CharacterEncodingOptions: TidyOptions {
+public struct CharacterEncodingOptions: TidyOptions {
     
     var tidyDoc: TidyDoc
     
-    var charEncoding: CharacterEncoding {
+    public var charEncoding: CharacterEncoding {
         
         get {
             
@@ -1723,7 +1726,7 @@ struct CharacterEncodingOptions: TidyOptions {
         
     }
     
-    
+    public 
     #if SUPPORT_ASIAN_ENCODINGS
     var language: String? {
     
@@ -1743,7 +1746,7 @@ struct CharacterEncodingOptions: TidyOptions {
     #endif
     
     
-    var outputEncoding: CharacterEncoding {
+    public var outputEncoding: CharacterEncoding {
         
         get {
             
@@ -1759,7 +1762,7 @@ struct CharacterEncodingOptions: TidyOptions {
         
     }
     
-    
+    public 
     #if SUPPORT_UTF16_ENCODINGS
     var outputBom: TriState {
     
@@ -1779,7 +1782,7 @@ struct CharacterEncodingOptions: TidyOptions {
     #endif
     
     
-    var asciiChars: YesNo {
+    public var asciiChars: YesNo {
         
         get {
             
@@ -1795,7 +1798,7 @@ struct CharacterEncodingOptions: TidyOptions {
         
     }
     
-    var newline: NewlineType {
+    public var newline: NewlineType {
         
         get {
             
@@ -1811,7 +1814,7 @@ struct CharacterEncodingOptions: TidyOptions {
         
     }
     
-    var inputEncoding: CharacterEncoding {
+    public var inputEncoding: CharacterEncoding {
         
         get {
             
