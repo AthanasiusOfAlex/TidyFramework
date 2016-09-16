@@ -14,52 +14,6 @@ import TidyBufferIO
 //
 // 1. Some way of detecting errors when setting options.
 
-// MARK - make it possible to convert a ctmbstr to a string.
-extension String {
-    
-// Old implementation (which still works)
-//    init?(_ tidyConstantString: ctmbstr) {
-//        
-//        if tidyConstantString.hashValue==0 { return nil }
-//        
-//        var result = ""
-//        var moveableReference = tidyConstantString
-//        
-//        // This had better be a null-terminated string!!!
-//        while true {
-//            
-//            let byte = Int(moveableReference.memory)
-//            if byte==0 { break }
-//            
-//            moveableReference = moveableReference.successor()
-//            
-//            let unicodeScalar = UnicodeScalar(byte)
-//            
-//            result.append(unicodeScalar)
-//            
-//        }
-//        
-//        self = result
-//        
-//    }
-
-    init?(_ tidyConstantString: ctmbstr) {
-        
-        if let swiftString = String(validatingUTF8: tidyConstantString) {
-            
-            self = swiftString
-            
-        } else {
-            
-            return nil
-            
-        }
-        
-    }
-    
-    
-}
-
 public enum YesNo {
     
     case yes
@@ -96,7 +50,12 @@ public enum DocType: String {
     
     init(_ tidyRawValue: ctmbstr) {
         
-        guard let rawValue = String(tidyRawValue), let value = DocType(rawValue: rawValue) else {
+        guard
+            
+            let rawValue = String(tidyConstantString: tidyRawValue),
+            let value = DocType(rawValue: rawValue)
+            
+        else {
             
             assert(false, "A bad value was used to initilize this enum. Check API.")
             
@@ -116,7 +75,12 @@ public enum TriState: String {
     
     init(_ tidyRawValue: ctmbstr) {
         
-        guard let rawValue = String(tidyRawValue), let value = TriState(rawValue: rawValue) else {
+        guard
+            
+            let rawValue = String(tidyConstantString: tidyRawValue),
+            let value = TriState(rawValue: rawValue)
+            
+        else {
             
             assert(false, "A bad value was used to initilize this enum. Check API.")
             
@@ -136,7 +100,12 @@ public enum NewlineType: String {
     
     init(_ tidyRawValue: ctmbstr) {
         
-        guard let rawValue = String(tidyRawValue), let value = NewlineType(rawValue: rawValue) else {
+        guard
+            
+            let rawValue = String(tidyConstantString: tidyRawValue),
+            let value = NewlineType(rawValue: rawValue)
+            
+        else {
             
             assert(false, "A bad value was used to initilize this enum. Check API.")
             
@@ -155,7 +124,7 @@ public enum RepeatedAttributeModes: String {
     
     init(_ tidyRawValue: ctmbstr) {
         
-        guard let tidyRawValue = String(tidyRawValue) else {
+        guard let tidyRawValue = String(tidyConstantString: tidyRawValue) else {
             
             assert(false, "A nil (i.e., no value) was used to initilize this enum. Check API.")
         
@@ -206,7 +175,12 @@ public enum AttributeSortStrategy: String {
     
     init(_ tidyRawValue: ctmbstr) {
         
-        guard let rawValue = String(tidyRawValue), let value = AttributeSortStrategy(rawValue: rawValue) else {
+        guard
+            
+            let rawValue = String(tidyConstantString: tidyRawValue),
+            let value = AttributeSortStrategy(rawValue: rawValue)
+            
+        else {
             
             assert(false, "A bad value was used to initilize this enum. Check API.")
             
@@ -237,7 +211,12 @@ public enum CharacterEncoding: String {
     
     init(_ tidyRawValue: ctmbstr) {
         
-        guard let rawValue = String(tidyRawValue), let value = CharacterEncoding(rawValue: rawValue) else {
+        guard
+            
+            let rawValue = String(tidyConstantString: tidyRawValue),
+            let value = CharacterEncoding(rawValue: rawValue)
+            
+        else {
             
             assert(false, "A bad value was used to initilize this enum. Check API.")
             
@@ -278,7 +257,7 @@ public struct MiscellaneousOptions: TidyOptions {
         
         get {
             
-            return String(tidyOptGetValue(tidyDoc, TidyErrFile))
+            return String(tidyConstantString: tidyOptGetValue(tidyDoc, TidyErrFile))
             
         }
         
@@ -294,7 +273,7 @@ public struct MiscellaneousOptions: TidyOptions {
         
         get {
             
-            return String(tidyOptGetValue(tidyDoc, TidyEmacsFile))
+            return String(tidyConstantString: tidyOptGetValue(tidyDoc, TidyEmacsFile))
             
         }
         
@@ -374,7 +353,7 @@ public struct MiscellaneousOptions: TidyOptions {
         
         get {
             
-            return String(tidyOptGetValue(tidyDoc, TidyOutFile))
+            return String(tidyConstantString: tidyOptGetValue(tidyDoc, TidyOutFile))
             
         }
         
@@ -523,21 +502,21 @@ public struct MarkupOptions: TidyOptions {
         
     }
     
-    public
+    
     #if SUPPORT_ASIAN_ENCODINGS
-    var ncr: YesNo {
+    public var ncr: YesNo {
     
-    get {
+        get {
     
-    return YesNo(tidyOptGetBool(tidyDoc, TidyNCR))
+            return YesNo(tidyOptGetBool(tidyDoc, TidyNCR))
     
-    }
+        }
     
-    set {
+        set {
     
-    tidyOptParseValue(tidyDoc, "ncr", "\(newValue)")
+            tidyOptParseValue(tidyDoc, "ncr", "\(newValue)")
     
-    }
+        }
     
     }
     #endif
@@ -611,7 +590,7 @@ public struct MarkupOptions: TidyOptions {
         
         get {
             
-            return String(tidyOptGetValue(tidyDoc, TidyCSSPrefix))
+            return String(tidyConstantString: tidyOptGetValue(tidyDoc, TidyCSSPrefix))
             
         }
         
@@ -627,7 +606,7 @@ public struct MarkupOptions: TidyOptions {
         
         get {
             
-            return String(tidyOptGetValue(tidyDoc, TidyDoctype))
+            return String(tidyConstantString: tidyOptGetValue(tidyDoc, TidyDoctype))
             
         }
         
@@ -691,7 +670,7 @@ public struct MarkupOptions: TidyOptions {
         
         get {
             
-            return String(tidyOptGetValue(tidyDoc, TidyPreTags))
+            return String(tidyConstantString: tidyOptGetValue(tidyDoc, TidyPreTags))
             
         }
         
@@ -707,7 +686,7 @@ public struct MarkupOptions: TidyOptions {
         
         get {
             
-            return String(tidyOptGetValue(tidyDoc, TidyAltText))
+            return String(tidyConstantString: tidyOptGetValue(tidyDoc, TidyAltText))
             
         }
         
@@ -755,7 +734,7 @@ public struct MarkupOptions: TidyOptions {
         
         get {
             
-            return String(tidyOptGetValue(tidyDoc, TidyInlineTags))
+            return String(tidyConstantString: tidyOptGetValue(tidyDoc, TidyInlineTags))
             
         }
         
@@ -979,7 +958,7 @@ public struct MarkupOptions: TidyOptions {
         
         get {
             
-            return String(tidyOptGetValue(tidyDoc, TidyEmptyTags))
+            return String(tidyConstantString: tidyOptGetValue(tidyDoc, TidyEmptyTags))
             
         }
         
@@ -1267,7 +1246,7 @@ public struct MarkupOptions: TidyOptions {
         
         get {
             
-            return String(tidyOptGetValue(tidyDoc, TidyBlockTags))
+            return String(tidyConstantString: tidyOptGetValue(tidyDoc, TidyBlockTags))
             
         }
         
@@ -1528,21 +1507,21 @@ public struct PrettyPrintOptions: TidyOptions {
         
     }
     
-    public 
+    
     #if SUPPORT_ASIAN_ENCODINGS
-    var punctuationWrap: YesNo {
+    public var punctuationWrap: YesNo {
     
-    get {
+        get {
     
-    return YesNo(tidyOptGetBool(tidyDoc, TidyPunctWrap))
+            return YesNo(tidyOptGetBool(tidyDoc, TidyPunctWrap))
     
-    }
+        }
     
-    set {
+        set {
     
-    tidyOptParseValue(tidyDoc, "punctuation-wrap", "\(newValue)")
+            tidyOptParseValue(tidyDoc, "punctuation-wrap", "\(newValue)")
     
-    }
+        }
     
     }
     #endif
@@ -1726,21 +1705,21 @@ public struct CharacterEncodingOptions: TidyOptions {
         
     }
     
-    public 
+    
     #if SUPPORT_ASIAN_ENCODINGS
-    var language: String? {
+    public var language: String? {
     
-    get {
+        get {
     
-    return String(tidyOptGetValue(tidyDoc, TidyLanguage))
+            return String(tidyConstantString: tidyOptGetValue(tidyDoc, TidyLanguage))
     
-    }
+        }
     
-    set {
+        set {
     
-    tidyOptParseValue(tidyDoc, "language", "\(newValue ?? "")")
+            tidyOptParseValue(tidyDoc, "language", "\(newValue ?? "")")
     
-    }
+        }
     
     }
     #endif
@@ -1762,21 +1741,21 @@ public struct CharacterEncodingOptions: TidyOptions {
         
     }
     
-    public 
+    
     #if SUPPORT_UTF16_ENCODINGS
-    var outputBom: TriState {
+    public var outputBom: TriState {
     
-    get {
+        get {
     
-    return TriState(tidyOptGetCurrPick(tidyDoc, TidyOutputBOM))
+            return TriState(tidyOptGetCurrPick(tidyDoc, TidyOutputBOM))
     
-    }
+        }
     
-    set {
+        set {
     
-    tidyOptParseValue(tidyDoc, "output-bom", "\(newValue)")
+            tidyOptParseValue(tidyDoc, "output-bom", "\(newValue)")
     
-    }
+        }
     
     }
     #endif

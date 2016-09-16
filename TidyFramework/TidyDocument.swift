@@ -38,7 +38,7 @@ open class TidyDocument {
         guard errorCode >= 0 else { return nil }
         
         // Return it!
-        return String(mainBuffer)
+        return String(tidyBuffer: mainBuffer)
         
     }
 

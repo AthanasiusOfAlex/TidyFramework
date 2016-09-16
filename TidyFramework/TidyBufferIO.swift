@@ -13,19 +13,23 @@ import TidyBufferIO
 // MARK - make it possible to convert a TidyBuffer to a string.
 extension String {
     
-    public init?(_ buffer: TidyBuffer) {
+    public init?(tidyBuffer: TidyBuffer) {
         
-        let cString = UnsafeMutablePointer<Int8>(buffer.bp)
+        let buffer: UnsafeMutablePointer<UInt8> = tidyBuffer.bp
+        let size = Int(tidyBuffer.size)
         
-        if let newValue = String(validatingUTF8: cString!) {
-            
-            self = newValue
-            
-        } else {
+        //  Just make sure our buffer is null-terminated.
+        assert(buffer[size]==0, "Tidy buffer is not null terminated!")
         
-            return nil
+        self = String(cString: buffer)
         
-        }
+    }
+    
+    init?(tidyConstantString: ctmbstr?) {
+        
+        guard let tidyConstantString = tidyConstantString else { return nil }
+        
+        self = String(cString: tidyConstantString)
         
     }
     
