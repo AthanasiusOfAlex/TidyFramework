@@ -1331,6 +1331,7 @@ public struct PrettyPrintOptions: TidyOptions {
         
     }
     
+    /// Escape items that look like closing tags in script tags
     public var escapeScripts: YesNo {
         
         get {
