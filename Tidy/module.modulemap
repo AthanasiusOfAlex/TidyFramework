@@ -1,19 +1,19 @@
 module Tidy [system] {
-    header "/opt/local/include/tidy.h"
+    header "/usr/local/include/tidy.h"
     export *
 }
 
 module TidyBufferIO [system] {
-    header "/opt/local/include/tidybuffio.h"
+    header "/usr/local/include/tidybuffio.h"
     export *
 }
 
 module TidyEnum [system] {
-    header "/opt/local/include/tidyenum.h"
+    header "/usr/local/include/tidyenum.h"
     export *
 }
 
 module TidyPlatform [system] {
-    header "/opt/local/include/tidyplatform.h"
+    header "/usr/local/include/tidyplatform.h"
     export *
 }
